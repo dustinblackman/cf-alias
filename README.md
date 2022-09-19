@@ -27,14 +27,15 @@ Create and manage CloudFlare email alias's easily to reduce the barrier in creat
 <!-- command-help start -->
 
 ```
-cf-alias 
+cf-alias v0.1.1
 CLI interface for Cloudflare Email Routing
 
 USAGE:
     cf-alias <SUBCOMMAND>
 
 OPTIONS:
-    -h, --help    Print help information
+    -h, --help       Print help information
+    -V, --version    Print version information
 
 SUBCOMMANDS:
     alfred        Commands for the Alfred extension
