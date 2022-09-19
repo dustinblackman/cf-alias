@@ -1,8 +1,11 @@
 #![deny(clippy::implicit_return)]
 #![allow(clippy::needless_return)]
 
-use vergen::{vergen, Config};
+use cargo_toml::Manifest;
+use std::fs::read;
 
 fn main() {
-    vergen(Config::default()).unwrap();
+    let m = Manifest::from_slice(&read("Cargo.toml").unwrap()).unwrap();
+    let version = m.package.as_ref().unwrap().version.to_owned();
+    println!("cargo:rustc-env=CFA_VERSION=v{version}");
 }

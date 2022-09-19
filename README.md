@@ -22,6 +22,8 @@
 
 Create and manage CloudFlare email alias's easily to reduce the barrier in creating unique emails per online account you own. You can list all alias to easily copy to clipboard, create unique alias of your choosing, or generate random ones!
 
+This was done quickly and just for fun, and is using an undocumented Cloudflare API. Bugs are expected!
+
 ![screenshot1](./.github/screenshots/1.jpg)
 
 <!-- command-help start -->
