@@ -1,11 +1,9 @@
-use crate::{cloudflare, config};
+use crate::{cloudflare, config, utils};
 use anyhow::Result;
 use clipboard::ClipboardContext;
 use clipboard::ClipboardProvider;
 use fstrings::*;
 use notify_rust::Notification;
-use rand::seq::SliceRandom;
-use rand::Rng;
 use serde::Serialize;
 use std::{thread, time};
 
@@ -22,9 +20,7 @@ struct Items {
 }
 
 pub async fn create(email_prefix: String) -> Result<()> {
-    let cf_config = config::load_config()?;
-    let root_domain = cf_config.cloudflare_root_domain;
-    let email = f!("{email_prefix}@{root_domain}");
+    let email = utils::get_email(email_prefix)?;
 
     copy_to_clopboard(email.to_owned());
     cloudflare::create_route(email.to_owned()).await?;
@@ -42,18 +38,9 @@ pub async fn create(email_prefix: String) -> Result<()> {
 
 pub fn create_list(query: String) -> Result<String> {
     let cf_config = config::load_config()?;
-    let root_domain = cf_config.cloudflare_root_domain;
     let forwarding_email = cf_config.cloudflare_forward_email;
 
-    let mut email = f!("{query}@{root_domain}");
-    if query == "random" {
-        let random_word = memorable_wordlist::WORDS
-            .choose(&mut rand::thread_rng())
-            .unwrap();
-        let num = rand::thread_rng().gen_range(0..1000).to_string();
-        email = f!("{random_word}-{num}@{root_domain}");
-    }
-
+    let email = utils::get_email(query)?;
     let items = Items {
         items: vec![Item {
             title: email.to_owned(),

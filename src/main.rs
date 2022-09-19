@@ -4,6 +4,7 @@
 mod alfred;
 mod cloudflare;
 mod config;
+mod utils;
 
 use anyhow::Result;
 use std::io;
@@ -17,6 +18,13 @@ async fn list_routes() -> Result<String> {
     emails.sort();
 
     return Ok(emails.join("\n"));
+}
+
+async fn create(email_prefix: String) -> Result<String> {
+    let email = utils::get_email(email_prefix)?;
+    cloudflare::create_route(email.to_owned()).await?;
+
+    return Ok(email);
 }
 
 fn build_cli() -> clap::Command<'static> {
@@ -71,6 +79,29 @@ fn build_cli() -> clap::Command<'static> {
                 )
                 .subcommand(clap::Command::new("list").about("List existing email routes.")),
         )
+         .subcommand(
+                clap::Command::new("create")
+                    .about("Creates a new forwarding email")
+                    .arg_required_else_help(true)
+                    .arg(
+                        clap::Arg::new("email-prefix")
+                            .short('e')
+                            .long("email-prefix")
+                            .help("Forwarding email prefix to create")
+                            .required(false)
+                            .takes_value(true)
+                            .multiple_values(false),
+                    )
+                    .arg(
+                        clap::Arg::new("random")
+                            .short('r')
+                            .long("random")
+                            .help("Generate a random email address")
+                            .required(false)
+                            .multiple_values(false),
+                    ),
+
+            )
         .subcommand(
             clap::Command::new("completion")
                 .about("Generates shell completions")
@@ -123,6 +154,18 @@ async fn parse_cli() -> Result<()> {
             }
             _ => unreachable!(),
         },
+        Some(("create", run_matches)) => {
+            let default_res = "".to_string();
+            let mut email_prefix = run_matches
+                .get_one::<String>("email-prefix")
+                .unwrap_or_else(|| return &default_res)
+                .to_string();
+            if run_matches.is_present("random") {
+                email_prefix = "random".to_string();
+            }
+            let email = create(email_prefix).await?;
+            println!("Created new email: {}", email);
+        }
         Some(("completion", run_matches)) => {
             if let Ok(generator) = run_matches.value_of_t::<clap_complete::Shell>("shell") {
                 eprintln!("Generating completion file for {}...", generator);
