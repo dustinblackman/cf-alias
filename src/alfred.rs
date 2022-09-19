@@ -4,6 +4,8 @@ use clipboard::ClipboardContext;
 use clipboard::ClipboardProvider;
 use fstrings::*;
 use notify_rust::Notification;
+use rand::seq::SliceRandom;
+use rand::Rng;
 use serde::Serialize;
 use std::{thread, time};
 
@@ -30,12 +32,38 @@ pub async fn create(email_prefix: String) -> Result<()> {
     Notification::new()
         .summary("Cloudflare Emails")
         .body(&f!("{email} has been successfully created"))
-        .icon("firefox")
+        .icon("email")
         .show()?;
 
     thread::sleep(time::Duration::from_secs(5));
 
     return Ok(());
+}
+
+pub fn create_list(query: String) -> Result<String> {
+    let cf_config = config::load_config()?;
+    let root_domain = cf_config.cloudflare_root_domain;
+    let forwarding_email = cf_config.cloudflare_forward_email;
+
+    let mut email = f!("{query}@{root_domain}");
+    if query == "random" {
+        let random_word = memorable_wordlist::WORDS
+            .choose(&mut rand::thread_rng())
+            .unwrap();
+        let num = rand::thread_rng().gen_range(0..1000).to_string();
+        email = f!("{random_word}-{num}@{root_domain}");
+    }
+
+    let items = Items {
+        items: vec![Item {
+            title: email.to_owned(),
+            arg: f!("alfred create -e {email}"),
+            subtitle: f!("Create {email} forwarding to {forwarding_email}"),
+        }],
+    };
+
+    let json_str = serde_json::to_string(&items)?;
+    return Ok(json_str);
 }
 
 pub fn copy_to_clopboard(email: String) {
@@ -73,18 +101,11 @@ pub async fn list_routes() -> Result<String> {
         })
         .collect::<Vec<Item>>();
 
-    let mut items_arr: Vec<Item> = vec![
-        Item {
-            title: "Manage...".to_string(),
-            arg: "alfred manage".to_string(),
-            subtitle: "Open the Cloudflare Email Routes UI".to_string(),
-        },
-        Item {
-            title: "Create".to_string(),
-            arg: "alfred create -e".to_string(),
-            subtitle: "Create a new forwarding email".to_string(),
-        },
-    ];
+    let mut items_arr: Vec<Item> = vec![Item {
+        title: "Manage...".to_string(),
+        arg: "alfred manage".to_string(),
+        subtitle: "Open the Cloudflare Email Routes UI".to_string(),
+    }];
 
     items_arr.append(&mut routes);
 

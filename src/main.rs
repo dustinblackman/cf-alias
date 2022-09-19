@@ -54,6 +54,19 @@ fn build_cli() -> clap::Command<'static> {
                         ),
                 )
                 .subcommand(
+                    clap::Command::new("create-list")
+                        .about("Autocomplete command used for creating new emails")
+                        .arg(
+                            clap::Arg::new("query")
+                                .short('q')
+                                .long("query")
+                                .help("Command query or email prefix to be used when creating a new email")
+                                .required(false)
+                                .takes_value(true)
+                                .multiple_values(false),
+                        ),
+                )
+                .subcommand(
                     clap::Command::new("manage").about("Opens the Cloudflare Email management UI."),
                 )
                 .subcommand(clap::Command::new("list").about("List existing email routes.")),
@@ -87,6 +100,15 @@ async fn parse_cli() -> Result<()> {
                     .unwrap()
                     .to_string();
                 alfred::create(email_prefix).await?;
+            }
+            Some(("create-list", run_matches)) => {
+                let default_res = "".to_string();
+                let query = run_matches
+                    .get_one::<String>("query")
+                    .unwrap_or_else(|| return &default_res)
+                    .to_string();
+                let res = alfred::create_list(query)?;
+                println!("{}", res);
             }
             Some(("clipboard", run_matches)) => {
                 let email = run_matches.get_one::<String>("email").unwrap().to_string();
