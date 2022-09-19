@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use serde::Deserialize;
 use std::fs;
 
@@ -14,13 +14,9 @@ pub struct Config {
 pub fn load_config() -> Result<Config> {
     let file_path = dirs::home_dir().unwrap().join(".cf-alias");
     if !file_path.exists() {
-        return Ok(Config {
-            cloudflare_account_id: "".to_owned(),
-            cloudflare_forward_email: "".to_owned(),
-            cloudflare_root_domain: "".to_owned(),
-            cloudflare_zone: "".to_owned(),
-            cloudflare_token: "".to_owned(),
-        });
+        return Err(anyhow!(
+            "$HOME/.cf-alias does not exist. Refer to the documentation to get started."
+        ));
     }
 
     let config_str = fs::read_to_string(file_path)?;
