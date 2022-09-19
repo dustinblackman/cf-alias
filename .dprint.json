@@ -5,7 +5,7 @@
     "**/*.{md,toml}"
   ],
   "excludes": [
-    "external/**",
+    "tools/cross/**",
     "target/**"
   ],
   "plugins": [

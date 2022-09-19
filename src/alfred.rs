@@ -19,14 +19,12 @@ struct Items {
     items: Vec<Item>,
 }
 
-pub async fn create(email_prefix: String) -> Result<()> {
-    let email = utils::get_email(email_prefix)?;
-
+pub async fn create(email: String) -> Result<()> {
     copy_to_clopboard(email.to_owned());
     cloudflare::create_route(email.to_owned()).await?;
 
     Notification::new()
-        .summary("Cloudflare Emails")
+        .summary("cf-alias")
         .body(&f!("{email} has been successfully created"))
         .icon("email")
         .show()?;
@@ -75,15 +73,17 @@ pub async fn list_routes() -> Result<String> {
         .await?
         .iter()
         .map(|e| {
-            let mut emoji = "🟥";
-            if e.enabled {
-                emoji = "✅";
+            let mut emoji = "✅";
+            let mut subtitle = f!("Forwarding to {e.forwarding_email}");
+            if !e.enabled {
+                emoji = "🟥";
+                subtitle = f!("Disabled: {subtitle}");
             }
 
             return Item {
                 title: f!("{emoji} {e.email}"),
                 arg: f!("alfred clipboard -e {e.email}"),
-                subtitle: f!("Forwarding to {e.forwarding_email}"),
+                subtitle,
             };
         })
         .collect::<Vec<Item>>();

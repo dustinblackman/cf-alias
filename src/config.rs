@@ -12,7 +12,7 @@ pub struct Config {
 }
 
 pub fn load_config() -> Result<Config> {
-    let file_path = dirs::home_dir().unwrap().join(".cf-alias");
+    let file_path = dirs::home_dir().unwrap().join(".cf-alias.json");
     if !file_path.exists() {
         return Err(anyhow!(
             "$HOME/.cf-alias does not exist. Refer to the documentation to get started."

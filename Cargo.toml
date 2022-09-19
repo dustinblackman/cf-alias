@@ -16,8 +16,86 @@ fstrings = "=0.2.3"
 memorable-wordlist = "=0.1.7"
 notify-rust = "=4.5.8"
 open = "=3.0.3"
+rand = "=0.8.4"
 reqwest = { version = "=0.11.11", default-features = false, features = ["rustls-tls", "json"] }
 serde = { version = "=1.0.143", features = ["derive"] }
 serde_json = "=1.0.83"
 tokio = { version = "=1.20.1", features = ["macros", "rt-multi-thread"] }
-rand = "=0.8.4"
+
+[dev-dependencies]
+cross = "=0.2.4"
+# dprint = "0.30.3"
+rust-script = "=0.21.0"
+
+[build-dependencies]
+vergen = { version = "=7.4.0", features = ["git"] }
+
+[package.metadata.commands]
+build-windows-x64 = '''set -e
+  cd tools/cross/docker
+  git checkout tags/v0.2.4 -- wine.sh
+  sd 'i386' 'i386\nmkdir -p /etc/apt/keyrings/ && wget -nc -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key\n' ./wine.sh
+  docker build -f cross-toolchains/docker/Dockerfile.x86_64-pc-windows-msvc-cross -t cross-msvc:local .
+  git checkout tags/v0.2.4 -- wine.sh
+  cd ../../../
+  cargo bin cross build --release --target x86_64-pc-windows-msvc
+'''
+build-completions = '''set -e
+  rm -rf completions
+  mkdir completions
+  ./target/debug/cf-alias completion --shell zsh > completions/cf-alias.zsh
+  ./target/debug/cf-alias completion --shell bash > completions/cf-alias.bash
+  ./target/debug/cf-alias completion --shell fish > completions/cf-alias.fish
+'''
+lint = '''set -e
+  cargo fmt --check
+  cargo clippy
+  cargo check
+  dprint check
+'''
+lint-fix = '''set -e
+  cargo clippy --fix --allow-dirty --allow-staged
+  cargo fix --allow-dirty --allow-staged
+  # Run twice as for some reason not all formatting is applied on the first try.
+  cargo fmt
+  cargo fmt
+  dprint fmt
+'''
+goreleaser = '''set -e
+  export CF_ALIAS_VERSION=$(cat Cargo.toml | grep version | head -n1 | awk -F '"' '{print $2}')
+
+  mkdir -p .bin
+  rm -f .bin/goreleaser
+  curl -L https://github.com/goreleaser/goreleaser/releases/download/v1.10.3/goreleaser_Darwin_x86_64.tar.gz | tar xz - -C .bin goreleaser
+
+  cargo cmd build-completions
+  AUR_KEY=$(cat ~/.ssh/aur) .bin/goreleaser --rm-dist
+  tools/apt.sh "$CF_ALIAS_VERSION" "$(realpath dist)"
+  tools/nur.sh "$CF_ALIAS_VERSION" "$(realpath dist)"
+  tools/yum.sh "$CF_ALIAS_VERSION" "$(realpath dist)"
+'''
+release = '''set -e
+  cargo check
+
+  export CF_ALIAS_VERSION=$(cat Cargo.toml | grep version | head -n1 | awk -F '"' '{print $2}')
+  git add .
+  git commit -m "v$CF_ALIAS_VERSION"
+  git tag -a "v$CF_ALIAS_VERSION" -m "v$CF_ALIAS_VERSION"
+
+  cargo build
+  cargo bin rust-script ./tools/update-readme.rs
+  dprint fmt
+  git add .
+  git commit --amend -m "v$CF_ALIAS_VERSION"
+  git tag -d "v$CF_ALIAS_VERSION"
+  git tag -a "v$CF_ALIAS_VERSION" -m "v$CF_ALIAS_VERSION"
+
+  cargo bin cross build --release --target x86_64-apple-darwin
+  cargo bin cross build --release --target x86_64-unknown-linux-gnu
+  # cargo bin cross build --release --target aarch64-unknown-linux-gnu
+  cargo cmd build-windows-x64
+
+  git push
+  git push --tags
+  cargo cmd goreleaser
+'''

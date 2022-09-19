@@ -30,7 +30,7 @@ async fn create(email_prefix: String) -> Result<String> {
 fn build_cli() -> clap::Command<'static> {
     return clap::Command::new("cf-alias")
         .about("CLI interface for Cloudflare Email Routing")
-        // .version(env!("VERGEN_GIT_SEMVER"))
+        .version(env!("VERGEN_GIT_SEMVER"))
         .setting(clap::AppSettings::SubcommandRequiredElseHelp)
         .subcommand(
             clap::Command::new("alfred")
@@ -77,7 +77,7 @@ fn build_cli() -> clap::Command<'static> {
                 .subcommand(
                     clap::Command::new("manage").about("Opens the Cloudflare Email management UI."),
                 )
-                .subcommand(clap::Command::new("list").about("List existing email routes.")),
+                .subcommand(clap::Command::new("list").about("List existing email forwarders")),
         )
          .subcommand(
                 clap::Command::new("create")

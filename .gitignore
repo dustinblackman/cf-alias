@@ -1,2 +1,5 @@
 /target
 *.txt
+.bin/
+dist/
+completions/
