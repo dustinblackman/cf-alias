@@ -13,7 +13,7 @@ pub fn get_email(query: String) -> Result<String> {
         let random_word = memorable_wordlist::WORDS
             .choose(&mut rand::thread_rng())
             .unwrap();
-        let num = rand::thread_rng().gen_range(0..1000).to_string();
+        let num = rand::thread_rng().gen_range(1000..9999).to_string();
         email = f!("{random_word}-{num}@{root_domain}");
     }
 
