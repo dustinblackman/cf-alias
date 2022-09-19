@@ -12,7 +12,7 @@ pub struct Config {
 }
 
 pub fn load_config() -> Result<Config> {
-    let file_path = dirs::home_dir().unwrap().join(".cloudflare-emails");
+    let file_path = dirs::home_dir().unwrap().join(".cf-alias");
     if !file_path.exists() {
         return Ok(Config {
             cloudflare_account_id: "".to_owned(),

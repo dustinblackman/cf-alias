@@ -185,6 +185,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2fff2a6927b3bb87f9595d67196a70493f627687a71d87a0d692242c33f58c11"
 
 [[package]]
+name = "cf-alias"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "clap_complete",
+ "clipboard",
+ "dirs",
+ "fstrings",
+ "memorable-wordlist",
+ "notify-rust",
+ "open",
+ "rand 0.8.4",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -258,27 +279,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3a093d6fed558e5fe24c3dfc85a68bb68f1c824f440d3ba5aca189e2998786b"
 dependencies = [
  "winapi",
-]
-
-[[package]]
-name = "cloudflare-emails"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "clap_complete",
- "clipboard",
- "dirs",
- "fstrings",
- "memorable-wordlist",
- "notify-rust",
- "open",
- "rand 0.8.4",
- "reqwest",
- "serde",
- "serde_json",
- "tokio",
 ]
 
 [[package]]

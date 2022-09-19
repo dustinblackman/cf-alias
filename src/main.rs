@@ -20,7 +20,7 @@ async fn list_routes() -> Result<String> {
 }
 
 fn build_cli() -> clap::Command<'static> {
-    return clap::Command::new("cloudflare-emails")
+    return clap::Command::new("cf-alias")
         .about("CLI interface for Cloudflare Email Routing")
         // .version(env!("VERGEN_GIT_SEMVER"))
         .setting(clap::AppSettings::SubcommandRequiredElseHelp)
