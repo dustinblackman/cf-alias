@@ -126,7 +126,7 @@ Cloudflare dashboard.
 ### Alfred
 
 Install the Alfred extension by
-[downloading](https://raw.githubusercontent.com/dustinblackman/cf-alias/master/alfred/mx.alfredworkflow) the extension, and dragging it in to Alfred to install. Use `mx` as a prefix to bring up all the available commands.
+[downloading](https://github.com/dustinblackman/cf-alias/blob/master/alfred/mx.alfredworkflow?raw=true) the extension, and dragging it in to Alfred to install. Use `mx` as a prefix to bring up all the available commands.
 
 ![screenshot1](./.github/screenshots/1.jpg)
 
