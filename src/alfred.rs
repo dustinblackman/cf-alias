@@ -89,16 +89,14 @@ pub async fn list_routes() -> Result<String> {
         .iter()
         .map(|e| {
             let mut emoji = "🟥";
-            let mut subtile = "Forwarding email is not active. Select to copy to clipboard.";
             if e.enabled {
                 emoji = "✅";
-                subtile = "Forwarding email is active. Select to copy to clipboard.";
             }
 
             return Item {
                 title: f!("{emoji} {e.email}"),
                 arg: f!("alfred clipboard -e {e.email}"),
-                subtitle: subtile.to_string(),
+                subtitle: f!("Forwarding to {e.forwarding_email}"),
             };
         })
         .collect::<Vec<Item>>();

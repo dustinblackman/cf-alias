@@ -53,6 +53,7 @@ pub struct Action {
 
 pub struct EmailEnabled {
     pub email: String,
+    pub forwarding_email: String,
     pub enabled: bool,
 }
 
@@ -76,8 +77,13 @@ pub async fn list_routes() -> Result<Vec<EmailEnabled>> {
         .result
         .iter()
         .map(|e| {
+            let mut forwading_email = "".to_string();
+            if !e.actions[0].value.is_empty() {
+                forwading_email = e.actions[0].value[0].to_owned();
+            }
             return EmailEnabled {
                 email: e.matchers[0].value.to_owned().unwrap_or_default(),
+                forwarding_email: forwading_email,
                 enabled: e.enabled,
             };
         })
