@@ -89,7 +89,7 @@ pub async fn list_routes() -> Result<String> {
         .collect::<Vec<Item>>();
 
     let mut items_arr: Vec<Item> = vec![Item {
-        title: "Manage...".to_string(),
+        title: "Manage".to_string(),
         arg: "alfred manage".to_string(),
         subtitle: "Open the Cloudflare Email Routes UI".to_string(),
     }];

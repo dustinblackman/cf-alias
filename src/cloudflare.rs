@@ -73,7 +73,7 @@ pub async fn list_routes() -> Result<Vec<EmailEnabled>> {
         .json::<RoutesListResponse>()
         .await?;
 
-    let emails = routes_list
+    let mut emails = routes_list
         .result
         .iter()
         .map(|e| {
@@ -89,6 +89,7 @@ pub async fn list_routes() -> Result<Vec<EmailEnabled>> {
         })
         .filter(|e| return !e.email.is_empty())
         .collect::<Vec<EmailEnabled>>();
+    emails.sort_by_key(|e| return e.email.to_owned());
 
     return Ok(emails);
 }
