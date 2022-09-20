@@ -62,7 +62,7 @@ pub fn open_manage() -> Result<()> {
     let root_domain = cf_config.cloudflare_root_domain;
 
     open::that(f!(
-        "https://dash.cloudflare.com/{account_id}/{root_domain}/email/routes"
+        "https://dash.cloudflare.com/{account_id}/{root_domain}/email/routing/routes"
     ))?;
 
     return Ok(());
