@@ -29,7 +29,7 @@ This was done quickly and just for fun, and is using an undocumented Cloudflare 
 <!-- command-help start -->
 
 ```
-cf-alias v0.1.4
+cf-alias v0.1.5
 CLI interface for Cloudflare Email Routing
 
 USAGE:
