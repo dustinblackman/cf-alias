@@ -54,7 +54,7 @@ SUBCOMMANDS:
 ### MacOS
 
 ```sh
-brew install dustinblackman/tab/cf-alias
+brew install dustinblackman/tap/cf-alias
 ```
 
 ### Debian / Ubuntu
