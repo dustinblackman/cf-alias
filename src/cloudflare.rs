@@ -51,13 +51,13 @@ pub struct Action {
     pub value: Vec<String>,
 }
 
-pub struct EmailEnabled {
+pub struct Email {
     pub email: String,
     pub forwarding_email: String,
     pub enabled: bool,
 }
 
-pub async fn list_routes() -> Result<Vec<EmailEnabled>> {
+pub async fn list_routes() -> Result<Vec<Email>> {
     let cf_config = config::load_config()?;
     let token = cf_config.cloudflare_token;
     let zone = cf_config.cloudflare_zone;
@@ -81,14 +81,14 @@ pub async fn list_routes() -> Result<Vec<EmailEnabled>> {
             if !e.actions[0].value.is_empty() {
                 forwading_email = e.actions[0].value[0].to_owned();
             }
-            return EmailEnabled {
+            return Email {
                 email: e.matchers[0].value.to_owned().unwrap_or_default(),
                 forwarding_email: forwading_email,
                 enabled: e.enabled,
             };
         })
         .filter(|e| return !e.email.is_empty())
-        .collect::<Vec<EmailEnabled>>();
+        .collect::<Vec<Email>>();
     emails.sort_by_key(|e| return e.email.to_owned());
 
     return Ok(emails);
