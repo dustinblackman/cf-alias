@@ -71,6 +71,7 @@ goreleaser = '''set -e
   cargo cmd build-completions
   AUR_KEY=$(cat ~/.ssh/aur) .bin/goreleaser --rm-dist
   tools/apt.sh "$CF_ALIAS_VERSION" "$(realpath dist)"
+  tools/choco.sh "$CF_ALIAS_VERSION" "$(realpath dist)"
   tools/nur.sh "$CF_ALIAS_VERSION" "$(realpath dist)"
   tools/yum.sh "$CF_ALIAS_VERSION" "$(realpath dist)"
 '''
