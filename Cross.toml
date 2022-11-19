@@ -1,5 +1,2 @@
 [target.x86_64-unknown-linux-gnu]
 pre-build = ["apt-get update && apt-get install -y xorg-dev python3 xcb libxcb-shape0-dev libxcb-render-util0-dev libxcb-xfixes0-dev"]
-
-[target.x86_64-pc-windows-msvc]
-image = "cross-msvc:local"
