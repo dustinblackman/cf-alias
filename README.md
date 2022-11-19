@@ -27,8 +27,9 @@ This was done quickly and just for fun, and is using an undocumented Cloudflare 
 ![screenshot1](./.github/screenshots/1.jpg)
 
 <!-- command-help start -->
+
 ```
-cf-alias v0.1.5
+cf-alias v0.1.7
 CLI interface for Cloudflare Email Routing
 
 USAGE:
@@ -45,6 +46,7 @@ SUBCOMMANDS:
     help          Print this message or the help of the given subcommand(s)
     list          List existing email routes.
 ```
+
 <!-- command-help end -->
 
 ## Install
@@ -85,15 +87,17 @@ yay -S cf-alias-bin
 
 ### Windows
 
-__Chocolatey__
+**Chocolatey**
 
 <!-- choco-install start -->
+
 ```sh
-choco install cf-alias --version=0.1.5
+choco install cf-alias --version=0.1.7
 ```
+
 <!-- choco-install end -->
 
-__Scoop__
+**Scoop**
 
 ```sh
 scoop bucket add dustinblackman https://github.com/dustinblackman/scoop-bucket.git
