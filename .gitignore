@@ -3,3 +3,5 @@
 .bin/
 dist/
 completions/
+THIRDPARTY.md
+THIRDPARTY.yml

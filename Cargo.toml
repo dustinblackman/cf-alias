@@ -22,13 +22,15 @@ serde = { version = "=1.0.143", features = ["derive"] }
 serde_json = "=1.0.83"
 tokio = { version = "=1.20.1", features = ["macros", "rt-multi-thread"] }
 
-[dev-dependencies]
-cross = "=0.2.4"
-# dprint = "0.30.3"
-rust-script = "=0.21.0"
-
 [build-dependencies]
 cargo_toml = "=0.11.5"
+
+[package.metadata.bin]
+cargo-deny = "0.13.5"
+cargo-bundle-licenses = "1.0.1"
+cross = "0.2.4"
+dprint = "0.30.3"
+rust-script = "=0.21.0"
 
 [package.metadata.commands]
 build-completions = '''set -e
@@ -42,7 +44,8 @@ lint = '''set -e
   cargo fmt --check
   cargo clippy
   cargo check
-  dprint check
+  cargo bin dprint check
+  cargo bin cargo-deny check licenses
 '''
 lint-fix = '''set -e
   cargo clippy --fix --allow-dirty --allow-staged
@@ -50,7 +53,7 @@ lint-fix = '''set -e
   # Run twice as for some reason not all formatting is applied on the first try.
   cargo fmt
   cargo fmt
-  dprint fmt
+  cargo bin dprint fmt
 '''
 goreleaser = '''set -e
   export CF_ALIAS_VERSION=$(cat Cargo.toml | grep version | head -n1 | awk -F '"' '{print $2}')
@@ -68,6 +71,10 @@ goreleaser = '''set -e
 '''
 release = '''set -e
   cargo check
+  cargo bin cargo-deny check licenses
+  cargo bin cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
+  rm -f THIRDPARTY.md
+  cat THIRDPARTY.yml | yq -p=yaml -o=json | jq -rc '.third_party_libraries[]' | grep -v 'NOT FOUND' | jq -rcs '.[] | "## \(.package_name) - \(.licenses[0].license)\n\n\(.licenses[0].text)\n---\n"' > THIRDPARTY.md
 
   export CF_ALIAS_VERSION=$(cat Cargo.toml | grep version | head -n1 | awk -F '"' '{print $2}')
   git add .
