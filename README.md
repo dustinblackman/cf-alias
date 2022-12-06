@@ -29,7 +29,7 @@ This was done quickly and just for fun, and is using an undocumented Cloudflare 
 <!-- command-help start -->
 
 ```
-cf-alias v0.1.7
+cf-alias v0.1.8
 CLI interface for Cloudflare Email Routing
 
 USAGE:
@@ -92,7 +92,7 @@ yay -S cf-alias-bin
 <!-- choco-install start -->
 
 ```sh
-choco install cf-alias --version=0.1.7
+choco install cf-alias --version=0.1.8
 ```
 
 <!-- choco-install end -->
