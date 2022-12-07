@@ -2,7 +2,6 @@ use crate::{cloudflare, config, utils};
 use anyhow::Result;
 use clipboard::ClipboardContext;
 use clipboard::ClipboardProvider;
-use fstrings::*;
 use notify_rust::Notification;
 use serde::Serialize;
 use std::{thread, time};
@@ -25,7 +24,7 @@ pub async fn create(email: String) -> Result<()> {
 
     Notification::new()
         .summary("cf-alias")
-        .body(&f!("{email} has been successfully created"))
+        .body(&format!("{email} has been successfully created"))
         .icon("email")
         .show()?;
 
@@ -42,8 +41,8 @@ pub fn create_list(query: String) -> Result<String> {
     let items = Items {
         items: vec![Item {
             title: email.to_owned(),
-            arg: f!("alfred create -e {email}"),
-            subtitle: f!("Create {email} forwarding to {forwarding_email}"),
+            arg: format!("alfred create -e {email}"),
+            subtitle: format!("Create {email} forwarding to {forwarding_email}"),
         }],
     };
 
@@ -61,7 +60,7 @@ pub fn open_manage() -> Result<()> {
     let account_id = cf_config.cloudflare_account_id;
     let root_domain = cf_config.cloudflare_root_domain;
 
-    open::that(f!(
+    open::that(format!(
         "https://dash.cloudflare.com/{account_id}/{root_domain}/email/routing/routes"
     ))?;
 
@@ -73,16 +72,19 @@ pub async fn list_routes() -> Result<String> {
         .await?
         .iter()
         .map(|e| {
+            let forwarding_email = &e.forwarding_email;
+            let email = &e.email;
+
             let mut emoji = "✅";
-            let mut subtitle = f!("Forwarding to {e.forwarding_email}");
+            let mut subtitle = format!("Forwarding to {forwarding_email}");
             if !e.enabled {
                 emoji = "🟥";
-                subtitle = f!("Disabled: {subtitle}");
+                subtitle = format!("Disabled: {subtitle}");
             }
 
             return Item {
-                title: f!("{emoji} {e.email}"),
-                arg: f!("alfred clipboard -e {e.email}"),
+                title: format!("{emoji} {email}"),
+                arg: format!("alfred clipboard -e {email}"),
                 subtitle,
             };
         })

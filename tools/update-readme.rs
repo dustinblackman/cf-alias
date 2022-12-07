@@ -1,9 +1,3 @@
-//! ```cargo
-//! [dependencies]
-//! fstrings = "0.2.3"
-//! ```
-
-use fstrings::*;
 use std::fs;
 use std::io::Write;
 use std::process::Command;
@@ -33,14 +27,16 @@ fn main() {
     let end_help = readme.find("<!-- command-help end -->").unwrap();
     readme.replace_range(
         start_help..end_help,
-        &f!("<!-- command-help start -->\n```\n{output_help}```\n"),
+        &format!("<!-- command-help start -->\n```\n{output_help}```\n"),
     );
 
     let start_choco = readme.find("<!-- choco-install start -->").unwrap();
     let end_choco = readme.find("<!-- choco-install end -->").unwrap();
     readme.replace_range(
         start_choco..end_choco,
-        &f!("<!-- choco-install start -->\n```sh\nchoco install cf-alias --version={version}```\n"),
+        &format!(
+            "<!-- choco-install start -->\n```sh\nchoco install cf-alias --version={version}```\n"
+        ),
     );
 
     let mut f = fs::File::create("./README.md").unwrap();

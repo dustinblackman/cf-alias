@@ -1,6 +1,5 @@
 use crate::config;
 use anyhow::Result;
-use fstrings::*;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -63,10 +62,10 @@ pub async fn list_routes() -> Result<Vec<Email>> {
     let zone = cf_config.cloudflare_zone;
 
     let routes_list = reqwest::Client::new()
-        .get(f!(
+        .get(format!(
             "https://api.cloudflare.com/client/v4/zones/{zone}/email/routing/rules"
         ))
-        .header("Authorization", f!("Bearer {token}"))
+        .header("Authorization", format!("Bearer {token}"))
         .header("Content-Type", "application/json")
         .send()
         .await?
@@ -103,7 +102,7 @@ pub async fn create_route(email: String) -> Result<()> {
     let now = chrono::offset::Utc::now().to_string();
     let body = CreateRequest {
         enabled: true,
-        name: f!("Rule created at {now}"),
+        name: format!("Rule created at {now}"),
         actions: vec![Action {
             type_field: "forward".to_string(),
             value: vec![forward_email],
@@ -116,10 +115,10 @@ pub async fn create_route(email: String) -> Result<()> {
     };
 
     reqwest::Client::new()
-        .post(f!(
+        .post(format!(
             "https://api.cloudflare.com/client/v4/zones/{zone}/email/routing/rules"
         ))
-        .header("Authorization", f!("Bearer {token}"))
+        .header("Authorization", format!("Bearer {token}"))
         .header("Content-Type", "application/json")
         .json(&body)
         .send()

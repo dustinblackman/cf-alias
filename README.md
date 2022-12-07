@@ -27,7 +27,6 @@ This was done quickly and just for fun, and is using an undocumented Cloudflare 
 ![screenshot1](./.github/screenshots/1.jpg)
 
 <!-- command-help start -->
-
 ```
 cf-alias v0.1.8
 CLI interface for Cloudflare Email Routing
@@ -46,7 +45,6 @@ SUBCOMMANDS:
     help          Print this message or the help of the given subcommand(s)
     list          List existing email routes.
 ```
-
 <!-- command-help end -->
 
 ## Install
@@ -90,11 +88,9 @@ yay -S cf-alias-bin
 **Chocolatey**
 
 <!-- choco-install start -->
-
 ```sh
 choco install cf-alias --version=0.1.8
 ```
-
 <!-- choco-install end -->
 
 **Scoop**
