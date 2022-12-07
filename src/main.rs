@@ -6,8 +6,9 @@ mod cloudflare;
 mod config;
 mod utils;
 
-use anyhow::Result;
 use std::io;
+
+use anyhow::Result;
 
 async fn list_routes() -> Result<String> {
     let routes = cloudflare::list_routes().await?;
@@ -124,36 +125,38 @@ fn print_completions<G: clap_complete::Generator>(gen: G, app: &mut clap::Comman
 async fn parse_cli() -> Result<()> {
     let matches = build_cli().get_matches();
     match matches.subcommand() {
-        Some(("alfred", args)) => match args.subcommand() {
-            Some(("create", run_matches)) => {
-                let email_prefix = run_matches
-                    .get_one::<String>("email-prefix")
-                    .unwrap()
-                    .to_string();
-                alfred::create(email_prefix).await?;
+        Some(("alfred", args)) => {
+            match args.subcommand() {
+                Some(("create", run_matches)) => {
+                    let email_prefix = run_matches
+                        .get_one::<String>("email-prefix")
+                        .unwrap()
+                        .to_string();
+                    alfred::create(email_prefix).await?;
+                }
+                Some(("create-list", run_matches)) => {
+                    let default_res = "".to_string();
+                    let query = run_matches
+                        .get_one::<String>("query")
+                        .unwrap_or_else(|| return &default_res)
+                        .to_string();
+                    let res = alfred::create_list(query)?;
+                    println!("{}", res);
+                }
+                Some(("clipboard", run_matches)) => {
+                    let email = run_matches.get_one::<String>("email").unwrap().to_string();
+                    alfred::copy_to_clopboard(email);
+                }
+                Some(("manage", _)) => {
+                    alfred::open_manage()?;
+                }
+                Some(("list", _)) => {
+                    let emails = alfred::list_routes().await?;
+                    println!("{}", emails);
+                }
+                _ => unreachable!(),
             }
-            Some(("create-list", run_matches)) => {
-                let default_res = "".to_string();
-                let query = run_matches
-                    .get_one::<String>("query")
-                    .unwrap_or_else(|| return &default_res)
-                    .to_string();
-                let res = alfred::create_list(query)?;
-                println!("{}", res);
-            }
-            Some(("clipboard", run_matches)) => {
-                let email = run_matches.get_one::<String>("email").unwrap().to_string();
-                alfred::copy_to_clopboard(email);
-            }
-            Some(("manage", _)) => {
-                alfred::open_manage()?;
-            }
-            Some(("list", _)) => {
-                let emails = alfred::list_routes().await?;
-                println!("{}", emails);
-            }
-            _ => unreachable!(),
-        },
+        }
         Some(("create", run_matches)) => {
             let default_res = "".to_string();
             let mut email_prefix = run_matches

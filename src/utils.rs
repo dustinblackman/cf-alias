@@ -1,7 +1,8 @@
-use crate::config;
 use anyhow::Result;
 use rand::seq::SliceRandom;
 use rand::Rng;
+
+use crate::config;
 
 pub fn get_email(query: String) -> Result<String> {
     let cf_config = config::load_config()?;

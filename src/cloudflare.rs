@@ -1,7 +1,9 @@
-use crate::config;
 use anyhow::Result;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
+use serde::Serialize;
 use serde_json::Value;
+
+use crate::config;
 
 #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

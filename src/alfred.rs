@@ -1,10 +1,15 @@
-use crate::{cloudflare, config, utils};
+use std::thread;
+use std::time;
+
 use anyhow::Result;
 use clipboard::ClipboardContext;
 use clipboard::ClipboardProvider;
 use notify_rust::Notification;
 use serde::Serialize;
-use std::{thread, time};
+
+use crate::cloudflare;
+use crate::config;
+use crate::utils;
 
 #[derive(Default, Debug, Clone, Serialize)]
 struct Item {

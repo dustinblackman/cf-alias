@@ -1,6 +1,8 @@
-use anyhow::{anyhow, Result};
-use serde::Deserialize;
 use std::fs;
+
+use anyhow::anyhow;
+use anyhow::Result;
+use serde::Deserialize;
 
 #[derive(Default, Debug, Clone, Deserialize)]
 pub struct Config {
