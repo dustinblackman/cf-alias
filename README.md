@@ -60,8 +60,8 @@ brew install dustinblackman/tap/cf-alias
 ### Debian / Ubuntu
 
 ```sh
-curl -s https://dustinblackman.github.io/apt/deb/KEY.gpg | apt-key add -
-curl -s https://dustinblackman.github.io/apt/deb/dustinblackman.list > /etc/apt/sources.list.d/dustinblackman.list
+curl -s https://apt.dustinblackman.com/KEY.gpg | apt-key add -
+curl -s https://apt.dustinblackman.com/dustinblackman.list > /etc/apt/sources.list.d/dustinblackman.list
 sudo apt-get update
 sudo apt-get install cf-alias
 ```
@@ -69,8 +69,8 @@ sudo apt-get install cf-alias
 ### Fedora / CentOS
 
 ```sh
-yum-config-manager --add-repo https://dustinblackman.github.io/yum/config.repo
-yum install cf-alias
+dnf config-manager --add-repo https://yum.dustinblackman.com/config.repo
+dnf install cf-alias
 ```
 
 ### Nix
